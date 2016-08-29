@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "Newsfeed Counter",
+  "description": "Counts how many items you've scrolled through on your Facebook newsfeed!",
+  "version": "1.0",
+  "content_scripts": [
+	{
+		"matches": ["https://www.facebook.com/*"],
+		"css": ["css/jquery-ui.css"],
+		"js": ["jquery/jquery-3.1.0.js", "jquery/jquery-ui.js", "js/counter.js"]
+	}
+  ],
+  
+  "web_accessible_resources": [
+    "templates/*"
+  ],
+  
+  "permissions": [
+    "activeTab"
+  ]
+}
