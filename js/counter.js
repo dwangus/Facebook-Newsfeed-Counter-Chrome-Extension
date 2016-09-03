@@ -1,3 +1,18 @@
+var activated = true;
+var counterBox;
+
+chrome.runtime.sendMessage({amActivated: "newsfeedCounter"}, function(response) {
+	activated = response.bool;//I'm not sure if this is asynchronous or not -- but I'm banking that the sendMessage() function returns before the html-document is ready
+});
+
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+	activated = message.bool;
+	if (!activated && counterBox) {//AKA, if it is NOW deactivated, and previously, we'd already assigned the variable counterBox...
+		$(counterBox).css("display", "none");
+		$(window).unbind('scroll');
+	}
+});
+
 $(document).ready(function() {
 	$.get(chrome.extension.getURL('templates/counter.html'), function(html) {
 		var myCounter = $.parseHTML(html);
@@ -9,8 +24,8 @@ $(document).ready(function() {
 		}
 		
 		//First arrival to facebook.com
-		if ($("div#stream_pagelet").exists()) {
-			var counterBox = $( "#draggableFB" );
+		if ($("div#stream_pagelet").exists() && activated) {
+			counterBox = $( "#draggableFB" );
 			$(counterBox).draggable();
 			var counter = 1;
 			$('#draggableFBText').html(counter);
@@ -53,8 +68,8 @@ $(document).ready(function() {
 		
 		//All subsequent clicks
 		$("a").on('click', function () {
-			if (!$("div#stream_pagelet").exists() || ($("div#stream_pagelet").exists() && $(this).is(':contains("Home")'))) {
-				var counterBox = $( "#draggableFB" );
+			if (activated && (!$("div#stream_pagelet").exists() || ($("div#stream_pagelet").exists() && $(this).is(':contains("Home")')))) {
+				counterBox = $( "#draggableFB" );
 				$(counterBox).draggable();
 				var counter = 1;
 				$('#draggableFBText').html(counter);
@@ -86,6 +101,7 @@ $(document).ready(function() {
 				});
 			} else {
 				$("#draggableFB").css("display", "none");
+				$(window).unbind('scroll');
 			}
 		});
 	});

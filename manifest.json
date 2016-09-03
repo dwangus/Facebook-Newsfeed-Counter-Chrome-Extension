@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Newsfeed Counter",
   "description": "Counts how many items you've scrolled through on your Facebook newsfeed!",
-  "version": "0.1",
+  "version": "1.0",
   "content_scripts": [
 	{
 		"matches": ["https://www.facebook.com/*"],
@@ -14,6 +14,19 @@
   "web_accessible_resources": [
     "templates/*"
   ],
+  
+  "background": {
+	"scripts": ["js/activate.js"],
+	"persistent": false
+  },
+
+  "browser_action": {
+	"default_icon": {
+		"32": "icons/nfc-32.png",
+		"38": "icons/nfc-38.png"
+	},
+	"default_title": "Click to deactivate Facebook Newsfeed-Counter"
+  },
   
   "permissions": [
     "activeTab"
